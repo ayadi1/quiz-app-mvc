@@ -2,6 +2,8 @@
 
 namespace App\Controllers;
 use App\Connection\Db;
+use App\Modules\Module;
+use App\Modules\ModuleAssurer;
 
 class ExamenController
 {
@@ -16,13 +18,44 @@ class ExamenController
     }
     public function create()
     {
+        if (!isset($_SESSION['user'], $_SESSION['user']['type']) && empty($_SESSION['user']['obj']) && $_SESSION['user']['type'] == 'formateur') {
+            require_once('views/404.php');
+            die();
+        }
+        $user = unserialize($_SESSION['user']['obj']);
+        $userType = $_SESSION['user']['type'];
+        $filieres = $user->getFiliere($this->db->connection());
+        $modules = [];
+        $competense = [];
+        $idFiliere = null;
+        $idModule = null;
+        $idCompetence = null;
+        if (isset($_SESSION['examen']['idFiliere']) && !empty($_SESSION['examen']['idFiliere'])) {
+            $idFiliere = $_SESSION['examen']['idFiliere'];
+            // $modules = ModuleAssurer::getModulesByFiliereFormateur($this->db->connection(), $idFiliere, $user->getId());
+        }
+        if (isset($_SESSION['examen']['idModule']) && !empty($_SESSION['examen']['idModule'])) {
+            $idModule = $_SESSION['examen']['idModule'];
+            $competense = Module::findById($this->db->connection(), $idModule)->getCompetence($this->db->connection(), $idModule, $user->getId());
+        }
+        require_once 'views/dashboard/examen/add.php';
     }
     public function store()
     {
+        if (!isset($_SESSION['user']) && empty($_SESSION['user']['obj']) && $_SESSION['user']['type'] == 'formateur') {
+            require_once('views/404.php');
+            die();
+        }
+        $user = unserialize($_SESSION['user']['obj']);
+        if (isset($_POST['filiere'])) {
+            $_SESSION['examen']['idFiliere'] = $_POST['filiere'];
+            header('location:add');
+        }
+
     }
     public function show()
     {
-        if (!isset($_SESSION['user']) && empty($_SESSION['user']['obj'])) {
+        if (!isset($_SESSION['user']) && empty($_SESSION['user']['obj']) && $_SESSION['user']['type'] == 'formateur') {
             require_once('views/404.php');
             die();
         }

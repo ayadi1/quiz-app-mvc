@@ -17,6 +17,8 @@ $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) 
     //dashboard start
     $r->get('/dashboard', DashboardController::class . ':show');
     $r->get('/dashboard/examen', ExamenController::class . ':show');
+    $r->get('/dashboard/examen/add', ExamenController::class . ':create');
+    $r->post('/dashboard/examen/add', ExamenController::class . ':store');
 
 //dashboard end
 });

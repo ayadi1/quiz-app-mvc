@@ -3,7 +3,7 @@
 declare(strict_types=1);
 namespace  App\Modules;
 
-
+use PDO;
 class ModuleAssurer
 {
 
@@ -154,5 +154,28 @@ class ModuleAssurer
         $this->id_group = $id_group;
 
         return $this;
+    }
+    public static function getModulesByFiliereFormateur(PDO $conn, int $idFiliere, int $idFormateur)
+    {
+        try {
+            $query = "SELECT * 
+            from MODULE md 
+            WHERE md.idFiliere = ?
+            AND	md.id in (SELECT ms.id_module 
+                          from ModuleAssurer ms 
+                          WHERE ms.id_formateur = ?)";
+            $pdoS = $conn->prepare($query);
+
+            $pdoS->execute([
+                $idFormateur,
+                $idFormateur,
+            ]);
+
+
+            return $pdoS->fetchAll(PDO::FETCH_CLASS, 'Module');
+        } catch (\Throwable $th) {
+            print_r($th);
+            return false;
+        }
     }
 }

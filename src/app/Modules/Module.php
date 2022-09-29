@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace  App\Modules;
+namespace App\Modules;
 use App\Connection\Db;
+use App\Modules\Competence;
 use PDO;
 
 class Module
@@ -13,21 +14,21 @@ class Module
     private int $id;
 
     /** @var string */
-    private string $TITRE_MOD;
+    private string $label;
     private Db $db;
 
     /**
      * Default constructor
      */
-    public function __construct(int $id, string $TITRE_MOD)
+    public function __construct(int $id, string $label)
     {
         $this->id = $id;
-        $this->TITRE_MOD = $TITRE_MOD;
+        $this->label = $label;
         $this->db = new Db();
     }
 
     /**
-     * @return [object Object]
+     * @return void
      */
     public function save()
     {
@@ -36,7 +37,7 @@ class Module
     }
 
     /**
-     * @return [object Object]
+     * @return [void
      */
     public function update()
     {
@@ -54,7 +55,7 @@ class Module
     }
 
     /**
-     * @return Collection
+     * @return void
      */
     public function all()
     {
@@ -64,9 +65,9 @@ class Module
 
     /**
      * @param  $id 
-     * @return [object Object]
+     * @return [void
      */
-    public static function findById(int $id, PDO $conn): Module | bool
+    public static function findById(PDO $conn, int $id): Module|bool
     {
         try {
             $query = "SELECT * FROM `MODULE` WHERE `id` = ?";
@@ -78,19 +79,19 @@ class Module
 
             if ($pdoS->rowCount() > 0) {
                 $module_row = $pdoS->fetch();
-                return new self($module_row->id, $module_row->TITRE_MOD);
+                return new self($module_row->id, $module_row->label);
             }
 
             return false;
-        } catch (\Throwable $th) {
+        }
+        catch (\Throwable $th) {
             print_r($th);
             return false;
         }
-        return false;
     }
 
     /**
-     * @return Collection<Formateur>
+     * @return void
      */
     public function formateurs()
     {
@@ -106,9 +107,10 @@ class Module
             $pdoS->execute([
                 $this->id
             ]);
-            $competence = $pdoS->fetchAll();
+            $competence = $pdoS->fetchAll(PDO::FETCH_CLASS, Competence::class);
             return $competence;
-        } catch (\Throwable $th) {
+        }
+        catch (\Throwable $th) {
             print_r($th);
             return [];
         }
@@ -135,22 +137,24 @@ class Module
     }
 
     /**
-     * Get the value of TITRE_MOD
+     * Get the value of label
      */
-    public function getTITRE_MOD()
+    public function getlabel()
     {
-        return $this->TITRE_MOD;
+        return $this->label;
     }
 
     /**
-     * Set the value of TITRE_MOD
+     * Set the value of label
      *
      * @return  self
      */
-    public function setTITRE_MOD($TITRE_MOD)
+    public function setlabel($label)
     {
-        $this->TITRE_MOD = $TITRE_MOD;
+        $this->label = $label;
 
         return $this;
     }
+
+
 }
