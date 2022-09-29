@@ -3,5 +3,5 @@
 
 
 return [
-    'base_url' => "/composer-pro/quiz-app-mvc/"
+    'base_url' => "/quiz-app-mvc/"
 ];

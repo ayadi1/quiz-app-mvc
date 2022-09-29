@@ -42,18 +42,19 @@ class LoginController
 
             if ($type === 'formateur') {
                 $user = Formateur::login($this->db->connection(), $email, $password);
-                $_SESSION['user']['type'] = 'formateur';
-            } elseif ($type === 'staigaire') {
-                $user = Stagiaire::login();
-                $_SESSION['user']['type'] = 'staigaire';
             }
+            elseif ($type === 'staigaire') {
+                $user = Stagiaire::login($this->db->connection(), $email, $password);
+            }
+            print_r($user);
             if ($user) {
                 header('location:dashboard');
+                $_SESSION['user']['type'] = 'formateur';
             }
 
-        } else {
+        }
+        else {
             header('location:login');
-
         }
     }
 
@@ -63,6 +64,8 @@ class LoginController
      */
     function show()
     {
+
+
         require_once 'views/login.php';
     }
 

@@ -99,6 +99,8 @@ class Formateur
             if ($pdoS->rowCount() > 0) {
                 $formateur_row = $pdoS->fetch();
 
+                print_r($password==$formateur_row->password);
+               
                 if ($formateur_row->password == $password) {
                     return new self(
                         $formateur_row->MLE,
