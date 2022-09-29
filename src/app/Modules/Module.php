@@ -13,6 +13,9 @@ class Module
     /** @var int */
     private int $id;
 
+    /** @var int */
+    private int $id_filiere;
+
     /** @var string */
     private string $label;
     private Db $db;
@@ -20,11 +23,19 @@ class Module
     /**
      * Default constructor
      */
-    public function __construct(int $id, string $label)
+    public function __construct()
     {
-        $this->id = $id;
-        $this->label = $label;
         $this->db = new Db();
+
+    }
+
+    public static function construct(int $id, string $label  , int $id_filiere)
+    {
+        $obj = new Module();
+        $obj->setId($id);
+        $obj->setlabel($label);
+        $obj->setId_filiere($id_filiere);
+        return $obj;
     }
 
     /**
@@ -79,7 +90,7 @@ class Module
 
             if ($pdoS->rowCount() > 0) {
                 $module_row = $pdoS->fetch();
-                return new self($module_row->id, $module_row->label);
+                return Module::construct($module_row->id, $module_row->label , $module_row->id_filiere);
             }
 
             return false;
@@ -157,4 +168,24 @@ class Module
     }
 
 
+
+    /**
+     * Get the value of id_filiere
+     */ 
+    public function getId_filiere()
+    {
+        return $this->id_filiere;
+    }
+
+    /**
+     * Set the value of id_filiere
+     *
+     * @return  self
+     */ 
+    public function setId_filiere($id_filiere)
+    {
+        $this->id_filiere = $id_filiere;
+
+        return $this;
+    }
 }

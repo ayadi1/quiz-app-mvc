@@ -3,6 +3,7 @@
 declare(strict_types=1);
 namespace  App\Modules;
 
+use App\Modules\Module;
 use PDO;
 class ModuleAssurer
 {
@@ -160,19 +161,19 @@ class ModuleAssurer
         try {
             $query = "SELECT * 
             from MODULE md 
-            WHERE md.idFiliere = ?
+            WHERE md.id_filiere    = ?
             AND	md.id in (SELECT ms.id_module 
                           from ModuleAssurer ms 
-                          WHERE ms.id_formateur = ?)";
+                          WHERE ms.id_formatuer = ?)";
             $pdoS = $conn->prepare($query);
 
             $pdoS->execute([
-                $idFormateur,
+                $idFiliere,
                 $idFormateur,
             ]);
 
 
-            return $pdoS->fetchAll(PDO::FETCH_CLASS, 'Module');
+            return $pdoS->fetchAll(PDO::FETCH_CLASS, Module::class);
         } catch (\Throwable $th) {
             print_r($th);
             return false;

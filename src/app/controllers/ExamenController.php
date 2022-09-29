@@ -26,17 +26,20 @@ class ExamenController
         $userType = $_SESSION['user']['type'];
         $filieres = $user->getFiliere($this->db->connection());
         $modules = [];
-        $competense = [];
+        $competenses = [];
         $idFiliere = null;
         $idModule = null;
         $idCompetence = null;
         if (isset($_SESSION['examen']['idFiliere']) && !empty($_SESSION['examen']['idFiliere'])) {
             $idFiliere = $_SESSION['examen']['idFiliere'];
-            // $modules = ModuleAssurer::getModulesByFiliereFormateur($this->db->connection(), $idFiliere, $user->getId());
+            $modules = ModuleAssurer::getModulesByFiliereFormateur($this->db->connection(), $idFiliere, $user->getId());
         }
         if (isset($_SESSION['examen']['idModule']) && !empty($_SESSION['examen']['idModule'])) {
             $idModule = $_SESSION['examen']['idModule'];
-            $competense = Module::findById($this->db->connection(), $idModule)->getCompetence($this->db->connection(), $idModule, $user->getId());
+            $module = Module::findById($this->db->connection(), $idModule);
+           
+
+            $competenses = $module->getCompetence($this->db->connection(), $idModule, $user->getId());
         }
         require_once 'views/dashboard/examen/add.php';
     }
@@ -49,6 +52,14 @@ class ExamenController
         $user = unserialize($_SESSION['user']['obj']);
         if (isset($_POST['filiere'])) {
             $_SESSION['examen']['idFiliere'] = $_POST['filiere'];
+            header('location:add');
+        }
+        if (isset($_POST['module'])) {
+            $_SESSION['examen']['idModule'] = $_POST['module'];
+            header('location:add');
+        }
+        if (isset($_POST['competence'])) {
+            $_SESSION['examen']['idCompetence'] = $_POST['competence'];
             header('location:add');
         }
 

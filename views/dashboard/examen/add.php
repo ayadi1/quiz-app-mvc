@@ -31,7 +31,7 @@
             <select class="form-select" name="module" id="" onchange="submit()">
                 <?php if (isset($idFiliere)) : ?>
                     <?php foreach ($modules as $module) : ?>
-                        <option <?= optionSelected('module', $module->getId()) ?>" value="<?= $module->getId() ?>"><?= $module->getLable(); ?></option>
+                        <option <?= optionSelected('idModule', $module->getId()) ?> value="<?= $module->getId() ?>"><?= $module->getLabel(); ?></option>
                     <?php endforeach; ?>
                 <?php endif; ?>
             </select>
@@ -42,8 +42,8 @@
             <label for="">competence</label>
             <select class="form-select" name="competence" id="" onchange="submit()">
                 <?php if (isset($idModule)) : ?>
-                    <?php foreach ($competences as $competence) : ?>
-                        <option <?= optionSelected('competence', $competence->getId()) ?>" value="<?= $competence->getId() ?>"><?= $competence->getLIB_COMP(); ?></option>
+                    <?php foreach ($competenses as $competence) : ?>
+                        <option <?= optionSelected('idCompetence', $competence->getId()) ?> value="<?= $competence->getId() ?>"><?= $competence->getLabel(); ?></option>
                     <?php endforeach; ?>
                 <?php endif; ?>
 
