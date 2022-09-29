@@ -2,14 +2,16 @@
 
 declare(strict_types=1);
 
-namespace  App\Modules;
+namespace App\Modules;
 
+use App\Modules\Examen;
+use App\Modules\Filiere;
 use PDO;
 class Formateur
 {
 
-    /** @var int MLE    */
-    private int $MLE;
+    /** @var int id    */
+    private int $id;
 
     /** @var string */
     private string $nom;
@@ -23,9 +25,9 @@ class Formateur
     /**
      * Default constructor
      */
-    public function __construct(int $MLE, string $nom, string $email, string $password)
+    public function __construct(int $id, string $nom, string $email, string $password)
     {
-        $this->MLE = $MLE;
+        $this->id = $id;
         $this->nom = $nom;
         $this->email = $email;
         $this->password = $password;
@@ -70,10 +72,10 @@ class Formateur
     /**
      * @return [object Object]
      */
-    public static function findByMLE(int $MLE)
+    public static function findByid(int $id)
     {
         // TODO implement here
-        return $MLE;
+        return $id;
     }
 
     /**
@@ -99,19 +101,19 @@ class Formateur
             if ($pdoS->rowCount() > 0) {
                 $formateur_row = $pdoS->fetch();
 
-                print_r($password==$formateur_row->password);
-               
                 if ($formateur_row->password == $password) {
                     return new self(
-                        $formateur_row->MLE,
+                        $formateur_row->id,
                         $formateur_row->nom,
                         $formateur_row->email,
                         $formateur_row->password
-                    );
+                        );
                 }
             }
             return false;
-        } catch (\Throwable $th) {
+        }
+        catch (\Throwable $th) {
+            print_r($th);
             return false;
         }
     }
@@ -157,28 +159,28 @@ class Formateur
     }
 
     /**
-     * Get the value of MLE
-     */ 
-    public function getMLE()
+     * Get the value of id
+     */
+    public function getid()
     {
-        return $this->MLE;
+        return $this->id;
     }
 
     /**
-     * Set the value of MLE
+     * Set the value of id
      *
      * @return  self
-     */ 
-    public function setMLE($MLE)
+     */
+    public function setid($id)
     {
-        $this->MLE = $MLE;
+        $this->id = $id;
 
         return $this;
     }
 
     /**
      * Get the value of password
-     */ 
+     */
     public function getPassword()
     {
         return $this->password;
@@ -188,11 +190,40 @@ class Formateur
      * Set the value of password
      *
      * @return  self
-     */ 
+     */
     public function setPassword($password)
     {
         $this->password = $password;
 
         return $this;
+    }
+    public function getExamen(PDO $conn)
+    {
+        try {
+            $query = "SELECT * FROM `EXAMEN` WHERE `id_formatuer` = ?";
+            $pdoS = $conn->prepare($query);
+            $pdoS->execute([
+                $this->id
+            ]);
+            return $pdoS->fetchAll(PDO::FETCH_CLASS, Examen::class);
+        }
+        catch (\Throwable $th) {
+            throw $th;
+        }
+    }
+    public function getFiliere(PDO $conn)
+    {
+        try {
+            $query = "SELECT * FROM `FILIERE` 
+            WHERE id in (select ff.id_filiere from FORMATEUR_FILIERE ff WHERE ff.id_formatuer = ?)";
+            $pdoS = $conn->prepare($query);
+            $pdoS->execute([
+                $this->id
+            ]);
+            return $pdoS->fetchAll(PDO::FETCH_CLASS, Filiere::class);
+        }
+        catch (\Throwable $th) {
+            throw $th;
+        }
     }
 }

@@ -8,7 +8,7 @@ class Stagiaire
 {
 
     /** @var int */
-    private int $CEF;
+    private int $id;
 
     /** @var string */
     private string $nom;
@@ -22,9 +22,9 @@ class Stagiaire
     /**
      * Default constructor
      */
-    public function __construct($CEF, $nom, $email, $password)
+    public function __construct($id, $nom, $email, $password)
     {
-        $this->CEF = $CEF;
+        $this->id = $id;
         $this->nom = $nom;
         $this->email = $email;
         $this->password = $password;
@@ -33,7 +33,7 @@ class Stagiaire
 
 
     /**
-     * @return [object Object]
+     * @return void
      */
     public function save()
     {
@@ -42,7 +42,7 @@ class Stagiaire
     }
 
     /**
-     * @return [object Object]
+     * @return void
      */
     public function update()
     {
@@ -69,18 +69,18 @@ class Stagiaire
     }
 
     /**
-     * @param int $CEF 
-     * @return [object Object]
+     * @param int $id 
+     * @return void
      */
-    public static function findByCEF(int $CEF)
+    public static function findByid(int $id)
     {
         // TODO implement here
 
-        return $CEF;
+        return null;
     }
 
     /**
-     * @return [object Object]
+     * @return void
      */
     public function group()
     {
@@ -89,7 +89,7 @@ class Stagiaire
     }
 
     /**
-     * @return [object Object]
+     * @return void
      */
     public function filiere()
     {
@@ -109,7 +109,7 @@ class Stagiaire
             if ($pdoS->rowCount() > 0) {
                 $staigaire_row = $pdoS->fetch();
                 if ($staigaire_row->password == $password) {
-                    return new self($staigaire_row->CEF, $staigaire_row->nom, $staigaire_row->email, $staigaire_row->password);
+                    return new self($staigaire_row->id, $staigaire_row->nom, $staigaire_row->email, $staigaire_row->password);
                 }
             }
 
@@ -120,21 +120,21 @@ class Stagiaire
     }
 
     /**
-     * Get the value of CEF
+     * Get the value of id
      */ 
-    public function getCEF()
+    public function getid()
     {
-        return $this->CEF;
+        return $this->id;
     }
 
     /**
-     * Set the value of CEF
+     * Set the value of id
      *
      * @return  self
      */ 
-    public function setCEF($CEF)
+    public function setid($id)
     {
-        $this->CEF = $CEF;
+        $this->id = $id;
 
         return $this;
     }
