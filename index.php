@@ -4,6 +4,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 $config = require_once __DIR__ . '/config/config.php';
 
 use App\Controllers\DashboardController;
+use App\Controllers\ExamenController;
 use App\Controllers\LoginController;
 
 // register router start
@@ -11,9 +12,12 @@ $dispatcher = FastRoute\simpleDispatcher(function (FastRoute\RouteCollector $r) 
     //login start
     $r->get('/login', LoginController::class . ':show');
     $r->post('/login', LoginController::class . ':store');
+    $r->get('/logout', LoginController::class . ':destroy');
     //login end
     //dashboard start
     $r->get('/dashboard', DashboardController::class . ':show');
+    $r->get('/dashboard/examen', ExamenController::class . ':show');
+
 //dashboard end
 });
 // register router end

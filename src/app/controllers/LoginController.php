@@ -40,18 +40,23 @@ class LoginController
             $type = $_POST['type'];
             $user = null;
 
+
             if ($type === 'formateur') {
                 $user = Formateur::login($this->db->connection(), $email, $password);
-                $_SESSION['user']['type'] = 'formateur';
-            } elseif ($type === 'staigaire') {
-                $user = Stagiaire::login();
-                $_SESSION['user']['type'] = 'staigaire';
+            }
+            elseif ($type === 'staigaire') {
+                $user = Stagiaire::login($this->db->connection(), $email, $password);
             }
             if ($user) {
+                $_SESSION['user']['type'] = $type;
+                $_SESSION['user']['obj'] = serialize($user);
                 header('location:dashboard');
+                return;
             }
+            header('location:login?status=error');
 
-        } else {
+        }
+        else {
             header('location:login');
 
         }
@@ -71,7 +76,7 @@ class LoginController
      * @return mixed
      */
     function edit()
-    {
+    {   
     }
 
     /**
@@ -87,6 +92,9 @@ class LoginController
      * @return mixed
      */
     function destroy()
-    {
+    {  
+        session_unset();
+        session_destroy();
+        header('location:login');
     }
 }

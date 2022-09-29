@@ -3,6 +3,8 @@
 declare(strict_types=1);
 
 namespace  App\Modules;
+use App\Connection\Db;
+use PDO;
 
 class Module
 {
@@ -99,7 +101,7 @@ class Module
     {
         try {
             $query = "SELECT * FROM `COMPETENCE` WHERE `id_module` = ?";
-            $pdoS = $this->db->connect()->prepare($query);
+            $pdoS = $this->db->connection()->prepare($query);
 
             $pdoS->execute([
                 $this->id
