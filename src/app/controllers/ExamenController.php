@@ -1,7 +1,9 @@
 <?php
 
 namespace App\Controllers;
+
 use App\Connection\Db;
+use App\Modules\Examen;
 use App\Modules\Module;
 use App\Modules\ModuleAssurer;
 
@@ -23,7 +25,6 @@ class ExamenController
             die();
         }
         $user = unserialize($_SESSION['user']['obj']);
-        $userType = $_SESSION['user']['type'];
         $filieres = $user->getFiliere($this->db->connection());
         $modules = [];
         $competenses = [];
@@ -37,7 +38,7 @@ class ExamenController
         if (isset($_SESSION['examen']['idModule']) && !empty($_SESSION['examen']['idModule'])) {
             $idModule = $_SESSION['examen']['idModule'];
             $module = Module::findById($this->db->connection(), $idModule);
-           
+
 
             $competenses = $module->getCompetence($this->db->connection(), $idModule, $user->getId());
         }
@@ -71,15 +72,30 @@ class ExamenController
             die();
         }
         $user = unserialize($_SESSION['user']['obj']);
-        $userType = $_SESSION['user']['type'];
         $examens = $user->getExamen($this->db->connection());
         require_once 'views/dashboard/examen/index.php';
     }
     public function edit()
     {
     }
-    public function update()
+    public function update(...$args)
     {
+        if (!isset($args['id'], $_POST['label'], $_POST['datePassation'])) {
+            require_once('views/404.php');
+            die();
+        }
+        $id = $args['id'];
+        $label = $_POST['label'];
+        $datePassation = $_POST['datePassation'];
+        $examen = Examen::findById($this->db->connection(), $id);
+
+        if ($examen) {
+            $examen->update($this->db->connection(), $label, $datePassation);
+            header('location:dashboard/examen');
+        }
+
+
+
     }
     public function destroy()
     {
