@@ -42,6 +42,9 @@ class ExamenController
 
             $competenses = $module->getCompetence($this->db->connection(), $idModule, $user->getId());
         }
+        if (isset($_SESSION['examen']['idCompetence'])) {
+            $idCompetence = $_SESSION['examen']['idCompetence'];
+        }
         require_once 'views/dashboard/examen/add.php';
     }
     public function store()
@@ -62,6 +65,38 @@ class ExamenController
         if (isset($_POST['competence'])) {
             $_SESSION['examen']['idCompetence'] = $_POST['competence'];
             header('location:add');
+        }
+        if (isset($_POST['label'], $_POST['competence'], $_POST['datePassation'])) {
+            $label = $_POST['label'];
+            $competence = $_POST['competence'];
+            $datePassation = $_POST['datePassation'];
+            // validation start
+            $isValid = true;
+            if (empty($label)) {
+                $_SESSION['errors']['addExam']['label'] = 'label is required';
+                $isValid = false;
+            }
+            if (strlen($label) > 255) {
+                $_SESSION['errors']['addExam']['label'] = 'The label is too long "max:255"';
+                $isValid = false;
+            }
+            if (empty($datePassation)) {
+                $_SESSION['errors']['addExam']['datePassation'] = 'date de passation is required';
+                $isValid = false;
+            }
+            if (empty($competence)) {
+                $_SESSION['errors']['addExam']['competence'] = 'competence is required';
+                $isValid = false;
+            }
+            if ($isValid) {
+                Examen::create($this->db->connection(), $label, $competence, $datePassation, $user->getId());
+                header('location:../examen');
+            }
+            else {
+                header('location:' . $_SERVER['HTTP_REFERER']);
+            }
+        // validation end
+
         }
 
     }
@@ -90,8 +125,8 @@ class ExamenController
         $examen = Examen::findById($this->db->connection(), $id);
 
         if ($examen) {
-            $examen->update($this->db->connection(), $label, $datePassation);
-            header('location:dashboard/examen');
+            $examen[0]->update($this->db->connection(), $label, $datePassation);
+            header('location:' . $_SERVER['HTTP_REFERER']);
         }
 
 

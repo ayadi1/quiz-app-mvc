@@ -10,7 +10,7 @@ class ModileExample
             $pdoS->execute([
 
             ]);
-            return $pdoS->fetchAll(PDO::FETCH_CLASS, 'sum class');
+            return $pdoS->fetchAll(PDO::FETCH_CLASS, 'some class');
         }
         catch (\Throwable $th) {
             throw $th;

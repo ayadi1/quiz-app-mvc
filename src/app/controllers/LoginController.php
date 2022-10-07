@@ -51,7 +51,7 @@ class LoginController
             print_r($user);
             if ($user) {
                 header('location:dashboard');
-
+                $_SESSION['user']['obj'] = serialize($user) ;
                 $_SESSION['user']['type'] = $type;
                 return;
             }

@@ -82,7 +82,7 @@ class Examen
     }
 
     /**
-     * @return Examen | bool
+     * @return array | bool
      */
     public static function findById(PDO $conn, int $id)
     {
@@ -100,7 +100,25 @@ class Examen
 
     }
 
+    public static function create(PDO $conn, string $label, $competence, string $datePassation, $idFormatuer)
+    {
 
+        try {
+            $query = "INSERT INTO `EXAMEN`(`id_competence`, `id_formatuer`, `label`, `dateCreation`, `datePassation`) VALUES (?,?,?,?,?)";
+            $pdoS = $conn->prepare($query);
+            $pdoS->execute([
+                $competence,
+                $idFormatuer,
+                $label,
+                date('Y-m-d'),
+                $datePassation
+            ]);
+            return true;
+        }
+        catch (\Throwable $th) {
+            throw $th;
+        }
+    }
 
 
     /**
